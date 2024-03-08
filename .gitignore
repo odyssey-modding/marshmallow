@@ -1,0 +1,11 @@
+.idea/
+cmake-build-*/
+build/
+.cache/
+tools/clang/
+tools/curl/
+tools/tmp/
+tools/linkle
+tools/linkle.exe
+deploy/
+.clangd/
