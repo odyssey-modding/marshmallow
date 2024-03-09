@@ -61,6 +61,12 @@ if(NOT EXISTS "${TOOLS_DIR}/curl")
   file(ARCHIVE_EXTRACT INPUT "${TOOLS_TMP_DIR}/curl.tar.xz" DESTINATION "${TOOLS_DIR}/curl")
 endif()
 
+# generate a .clangd file
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.clangd")
+  file(REAL_PATH "${TOOLS_DIR}/clang/bin/clang++${EXE_EXT}" CLANGD_DRIVER_PATH)
+  file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${TOOLS_DIR}/clang/bin/clang++")
+endif()
+
 set(CMAKE_C_COMPILER "${TOOLS_DIR}/clang/bin/clang${EXE_EXT}")
 set(CMAKE_CXX_COMPILER "${TOOLS_DIR}/clang/bin/clang++${EXE_EXT}")
 set(CMAKE_ASM_COMPILER "${TOOLS_DIR}/clang/bin/clang${EXE_EXT}")
