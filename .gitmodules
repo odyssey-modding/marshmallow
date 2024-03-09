@@ -1,0 +1,3 @@
+[submodule "nnheaders"]
+  path = libs/nnsdk/submodule
+  url = https://github.com/open-ead/nnheaders.git
