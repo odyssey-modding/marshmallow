@@ -32,6 +32,7 @@ target_link_libraries(subsdk9 PUBLIC marshmallow
         -Wl,--whole-archive
         -Wl,--export-dynamic
         -Wl,--hash-style=sysv
+        -Wl,--build-id=uuid
         -Wl,-init,rtldInit
 )
 generate_npdm(subsdk9 ${CMAKE_SOURCE_DIR}/user/subsdk9.json)

@@ -23,7 +23,7 @@ __module_start:
     .ascii "~~exlaunch uwu~~"
 
 entrypoint:
-   // Arguments on NSO entry:
+    // Arguments on NSO entry:
     //   x0=zero                  | x1=main thread handle
     // Arguments on NRO entry (homebrew ABI):
     //   x0=ptr to env context    | x1=UINT64_MAX (-1 aka 0xFFFFFFFFFFFFFFFF)

@@ -1,4 +1,5 @@
 #include <exl/util/sys/mem_layout.hpp>
+#include <exl/util/modules.hpp>
 #include <exl/patch/patcher_impl.hpp>
 #include <exl/nx/kernel/virtmem.h>
 #include <exl/util/sys/cur_proc_handle.hpp>
@@ -56,11 +57,19 @@ extern "C" {
 
 extern "C" void userInit() {
     exl::util::impl::InitMemLayout();
-    if (exl::util::mem_layout::s_SelfModuleIdx != 0) {
-        // we are not rtld!
-        // todo: initialize exception handling?
-    }
     virtmemSetup();
     exl::patch::impl::InitPatcherImpl();
     exl::util::proc_handle::Get();
+
+    using namespace exl::util;
+    if (mem_layout::s_SelfModuleIdx != mem_layout::s_RtldModuleIdx) {
+        // we are not rtld!
+        // todo: initialize exception handling
+
+        // Stopgap solution for not triggering the sdk's user exception handler.
+        // This will be replaced with our exception handler
+        exl::util::RwPages rtld(exl::util::GetRtldModuleInfo().m_Text.m_Start, 0x10);
+        reinterpret_cast<u32*>(rtld.GetRw())[0] = 0x52800020;
+        reinterpret_cast<u32*>(rtld.GetRw())[1] = 0xD4000501;
+    }
 }
