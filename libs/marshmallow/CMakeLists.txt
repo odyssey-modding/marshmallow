@@ -13,4 +13,4 @@ target_include_directories(marshmallow
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(marshmallow PUBLIC exlaunch)
+target_link_libraries(marshmallow PUBLIC exlaunch nnsdk)

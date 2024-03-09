@@ -1,11 +1,11 @@
-add_library(nnheaders INTERFACE)
+add_library(nnsdk INTERFACE)
 
-target_compile_options(NintendoSDK PRIVATE -fno-strict-aliasing)
-target_compile_options(NintendoSDK PRIVATE -fno-exceptions)
-target_compile_options(NintendoSDK PRIVATE -Wall -Wextra)
-target_compile_options(NintendoSDK PRIVATE -Wno-invalid-offsetof)
+target_compile_options(nnsdk INTERFACE -fno-strict-aliasing)
+target_compile_options(nnsdk INTERFACE -fno-exceptions)
+target_compile_options(nnsdk INTERFACE -Wall -Wextra)
+target_compile_options(nnsdk INTERFACE -Wno-invalid-offsetof)
 
-target_compile_definitions(NintendoSDK PRIVATE
+target_compile_definitions(nnsdk INTERFACE
         NN_SDK_MAJOR=${NN_SDK_MAJOR}
         NN_SDK_MINOR=${NN_SDK_MINOR}
         NN_SDK_PATCH=${NN_SDK_PATCH}
@@ -15,7 +15,7 @@ target_compile_definitions(NintendoSDK PRIVATE
         NN_WARE_PATCH=${NN_WARE_PATCH}
 )
 
-target_include_directories(nnheaders
+target_include_directories(nnsdk
     INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/submodule/include
         ${CMAKE_CURRENT_SOURCE_DIR}/user/

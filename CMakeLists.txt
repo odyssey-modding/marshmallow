@@ -20,6 +20,7 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -x assembler-with-cpp -g ${ARCH}")
 include(cmake/Helpers.cmake)
 
 add_subdirectory(libs/exlaunch)
+add_subdirectory(libs/nnsdk)
 add_subdirectory(libs/marshmallow)
 
 add_executable(subsdk9)
