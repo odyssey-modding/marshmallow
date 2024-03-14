@@ -10,3 +10,4 @@ deploy/
 .idea/
 .cache/
 .clangd
+.vscode/settings.json
