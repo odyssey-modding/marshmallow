@@ -596,8 +596,8 @@ namespace exl::hook::nx64 {
 
         /* TODO: thread safety */
 
-        u32* rxtrampoline = NULL;
-        u32* rwtrampoline = NULL;
+        u32* rxtrampoline = nullptr;
+        u32* rwtrampoline = nullptr;
         if (do_trampoline)
             R_ABORT_UNLESS(AllocForTrampoline(&rxtrampoline, &rwtrampoline));
 

@@ -4,8 +4,9 @@ set(CMAKE_SYSTEM_PROCESSOR "aarch64")
 
 # for multiplatform builds to identify that they are building for the switch
 set(SWITCH TRUE)
-set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
 set(CMAKE_EXECUTABLE_SUFFIX ".elf")
+set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS FALSE)
+
 if(WIN32)
   set(EXE_EXT ".exe")
 endif()
@@ -69,13 +70,13 @@ set(CURL_LOCATION "${TOOLS_DIR}/curl/curl${EXE_EXT}")
 file(REAL_PATH "${TOOLS_DIR}/clang/bin/clang++${EXE_EXT}" CLANGD_DRIVER_PATH)
 
 # generate a .clangd file
-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.clangd")
-  file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${CLANGD_DRIVER_PATH}")
+if (NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.clangd")
+  file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${CLANGD_DRIVER_PATH}")
 endif()
 
 # generate .vscode/settings.json
-if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.json")
-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.template.jsonc" "${CMAKE_CURRENT_SOURCE_DIR}/.vscode/settings.json" @ONLY)
+if (NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json")
+  configure_file("${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.template.jsonc" "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json" @ONLY)
 endif()
 
 set(CMAKE_C_COMPILER_WORKS true)

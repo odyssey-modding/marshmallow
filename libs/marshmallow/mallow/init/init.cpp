@@ -1,3 +1,4 @@
+#include <exl/hook/nx64/impl.hpp>
 #include <exl/util/sys/mem_layout.hpp>
 #include <exl/util/modules.hpp>
 #include <exl/patch/patcher_impl.hpp>
@@ -60,16 +61,29 @@ extern "C" void userInit() {
     virtmemSetup();
     exl::patch::impl::InitPatcherImpl();
     exl::util::proc_handle::Get();
+    exl::hook::nx64::Initialize();
 
     using namespace exl::util;
     if (mem_layout::s_SelfModuleIdx != mem_layout::s_RtldModuleIdx) {
         // we are not rtld!
         // todo: initialize exception handling
+        // svcBreak(mem_layout::s_ModuleCount, mem_layout::s_SelfModuleIdx, mem_layout::s_RtldModuleIdx);
 
         // Stopgap solution for not triggering the sdk's user exception handler.
-        // This will be replaced with our exception handler
-        exl::util::RwPages rtld(exl::util::GetRtldModuleInfo().m_Text.m_Start, 0x10);
-        reinterpret_cast<u32*>(rtld.GetRw())[0] = 0x52800020;
-        reinterpret_cast<u32*>(rtld.GetRw())[1] = 0xD4000501;
+        // This will be replaced with our exception handler later.
+        {
+            exl::util::RwPages rtld(exl::util::GetRtldModuleInfo().m_Text.m_Start, 0x10);
+            reinterpret_cast<u32*>(rtld.GetRw())[0] = 0x52800020; // mov w0, #1
+            reinterpret_cast<u32*>(rtld.GetRw())[1] = 0xD4000501; // svc #0x28
+        }
+
+        // this allows atmosphere to detect symbols in our module!
+        // this is only okay when we aren't rtld, as we would be overwriting the exception handler's route otherwise
+        // see https://github.com/Atmosphere-NX/Atmosphere/blob/c8c76bf8f8f6f9587de5d8ac1bd7090635353e9b/stratosphere/creport/source/creport_modules.cpp#L297-L335
+        // for how atmosphere detects the dynamic section
+        {
+            exl::util::RwPages startPage(exl::util::modules::GetSelfStart(), 0x4);
+            reinterpret_cast<u32*>(startPage.GetRw())[0] = 0;
+        }
     }
 }

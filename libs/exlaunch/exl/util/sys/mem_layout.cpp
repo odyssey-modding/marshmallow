@@ -86,11 +86,8 @@ namespace exl::util {
                     data.m_Size = meminfo.size;
                     total.m_Size = data.GetEnd() - total.m_Start;
 
-                    /* This only needs to be determined at runtime if we are in an application. */
-#ifdef EXL_AS_MODULE
-                    if(total.m_Start == (uintptr_t) &__module_start)
+                    if(total.m_Start == reinterpret_cast<uintptr_t>(&__module_start))
                         util::mem_layout::s_SelfModuleIdx = nextModIdx;
-#endif
 
                     /* Store built module info. */
                     impl::mem_layout::s_ModuleInfos[nextModIdx] = curModInfo;
