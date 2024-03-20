@@ -1,3 +1,5 @@
 #pragma once
 
-void getInitArgs(void** x0, void** x1);
+namespace mallow::init {
+    void getInitArgs(void** x0, void** x1);
+}

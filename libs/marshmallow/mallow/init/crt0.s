@@ -35,7 +35,7 @@ entrypoint:
     cmp  x0, #0
     ccmn x1, #1, #4, ne // 4 = Z
     beq  get_module_info
-    b exceptionMain
+    b _ZN6mallow9exception14handlePhaseOneENS0_13ExceptionTypeEPNS0_19KernelExceptionInfoE
 
 get_module_info:
     // Get start of our module

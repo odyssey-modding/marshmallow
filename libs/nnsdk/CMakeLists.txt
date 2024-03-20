@@ -16,7 +16,8 @@ target_compile_definitions(nnsdk INTERFACE
 )
 
 target_include_directories(nnsdk
+    SYSTEM
     INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}/submodule/include
         ${CMAKE_CURRENT_SOURCE_DIR}/user/
+        ${CMAKE_CURRENT_SOURCE_DIR}/submodule/include
 )

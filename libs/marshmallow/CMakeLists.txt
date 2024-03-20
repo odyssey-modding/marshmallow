@@ -2,14 +2,21 @@ add_library(marshmallow STATIC)
 
 target_sources(marshmallow
     PRIVATE
-        mallow/init/init.cpp
-        mallow/init/crt0.s
         mallow/exception/handler.cpp
         mallow/exception/handler.hpp
-        mallow/debug.hpp
+        mallow/exception/handler.s
+        mallow/init/init.cpp
+        mallow/init/initArgs.hpp
+        mallow/init/crt0.s
+        mallow/logging/logger.cpp
+        mallow/logging/logger.hpp
+        mallow/logging/logSinks.cpp
+        mallow/logging/logSinks.hpp
+        mallow/logging/debug.hpp
 )
 
 target_include_directories(marshmallow
+    SYSTEM
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )

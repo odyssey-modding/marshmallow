@@ -45,7 +45,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: None
+NamespaceIndentation: All
 ObjCBlockIndentWidth: 4
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
@@ -68,7 +68,7 @@ SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: c++17
+Standard: Latest
 TabWidth: 4
 UseTab: Never
 WhitespaceSensitiveMacros: [ "SEAD_ENUM", "SEAD_ENUM_EX", "SEAD_ENUM_EX_VALUES" ]

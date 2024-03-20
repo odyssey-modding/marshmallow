@@ -82,3 +82,5 @@ endif()
 set(CMAKE_C_COMPILER_WORKS true)
 set(CMAKE_CXX_COMPILER_WORKS true)
 set(CMAKE_ASM_COMPILER_WORKS true)
+
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -x assembler-with-cpp -Wl,-z,norelro -g")

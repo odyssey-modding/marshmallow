@@ -11,13 +11,19 @@ add_compile_options(-stdlib=libc++)
 add_compile_options(-fPIC)
 add_compile_options(-fstandalone-debug)
 add_compile_options(-v -Wall -O3 -nostdlib -ffunction-sections -fdata-sections)
+add_compile_options(-Werror=return-type)
 add_compile_options(-fno-rtti -fno-exceptions -fno-asynchronous-unwind-tables -fno-unwind-tables -fvisibility=default)
 add_definitions(-D SWITCH)
+add_link_options(-shared -ffunction-sections -fdata-sections)
 add_link_options(-stdlib=libc++ -nostdlib)
-add_link_options(-fPIC -shared -ffunction-sections -fdata-sections)
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -x assembler-with-cpp -g ${ARCH}")
 
 include(cmake/Helpers.cmake)
+
+# Change this depending on the SDK version you are targeting
+set(NN_SDK_MAJOR 3)
+set(NN_SDK_MINOR 5)
+set(NN_SDK_PATCH 1)
+set(NN_SDK_TYPE "Release")
 
 add_subdirectory(libs/exlaunch)
 add_subdirectory(libs/nnsdk)
@@ -28,7 +34,6 @@ add_subdirectory(user)
 
 target_link_libraries(subsdk9 PUBLIC marshmallow
         -T ${CMAKE_SOURCE_DIR}/cmake/linker.ld
-        -fPIE
         -Wl,--whole-archive
         -Wl,--export-dynamic
         -Wl,--hash-style=sysv

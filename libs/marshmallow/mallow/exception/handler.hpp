@@ -1,6 +1,10 @@
 #pragma once
 
+#include <array>
+#include <exl/nx/kernel/svc.h>
 #include <exl/types.h>
+#include <nn/os.h>
+#include <nn/types.h>
 
 namespace mallow::exception {
     enum class ExceptionType : u32 {
@@ -19,20 +23,47 @@ namespace mallow::exception {
         AtmosphereStdAbort = 0xFFE,
     };
 
-    class ExceptionInfo {
-        uintptr_t r[29];
-        uintptr_t fp;
-        uintptr_t lr;
-        uintptr_t sp;
-        uintptr_t pc;
+    // 64-bit Exception Info
+    struct ExceptionInfo {
+        std::array<nn::os::CpuRegister, 29>& gpRegisters;
+        std::array<nn::os::FpuRegister, 32>& fpuRegisters;
+        nn::os::CpuRegister fp;
+        nn::os::CpuRegister lr;
+        nn::os::CpuRegister sp;
+        nn::os::CpuRegister pc;
         u32 pstate;
         u32 afsr0;
         u32 afsr1;
         u32 esr;
-        uintptr_t far;
+        nn::os::CpuRegister far;
         ExceptionType type;
 
-    public:
-        // work in progress
+        // Only use this if you know what you're doing
+        void NORETURN ignoreException() {
+            pc.x += 4;
+            returnFromExecution(false);
+        }
+
+        // Only use this if you know what you're doing
+        void NORETURN returnFromExecution(bool exiting);
+
+        // If you're done with exception handling, use this to exit the process.
+        void NORETURN exit() { returnFromExecution(true); }
     };
-}
+
+    using HandlerFunc = void (*)(ExceptionInfo* info);
+    HandlerFunc setExceptionHandler(HandlerFunc handler);
+    
+    void initialize();
+    void installHandlerAsSubsdk();
+
+    class ScopedHandler {
+        void (*previousHandler)(ExceptionInfo* info);
+
+    public:
+        ScopedHandler(void (*handler)(ExceptionInfo* info)) {
+            previousHandler = setExceptionHandler(handler);
+        }
+        ~ScopedHandler() { setExceptionHandler(previousHandler); }
+    };
+}  // namespace mallow::exception

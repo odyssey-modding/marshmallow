@@ -18,7 +18,7 @@ struct ModuleObject {
     inline void ResolveSymbolRelaJumpSlot(Elf_Rela *entry,
                                           bool do_lazy_got_init);
 
-   public:
+   public:  
     struct ModuleObject *next;
     struct ModuleObject *prev;
     union {

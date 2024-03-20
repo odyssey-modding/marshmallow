@@ -21,7 +21,7 @@ target_sources(exlaunch
 )
 
 target_include_directories(exlaunch
+    SYSTEM
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
-

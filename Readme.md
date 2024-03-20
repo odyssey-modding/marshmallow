@@ -36,8 +36,14 @@ Hook definitions without macros
   - what title id to use when placing deployments into `/atmosphere/contents/FTP_TITLE_ID/exefs/`
 
 ## Credits
-- [exlaunch](https://github.com/shadowninja108/exlaunch/)
-- [BDSP](https://github.com/Martmists-GH/BDSP)
-- [Sanae](https://github.com/Sanae6)
-- [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere)
-- [oss-rtld](https://github.com/Thog/oss-rtld)
+- [shadowninja108](https://github.com/shadowninja108)
+  - [exlaunch](https://github.com/shadowninja108/exlaunch)
+  - Lots of love <3
+- [EngineLessCC](https://github.com/EngineLessCC)
+  - [exlaunch-cmake](https://github.com/EngineLessCC/exlaunch-cmake/)
+- [CraftyBoss](https://github.com/CraftyBoss)
+  - [SMO-Exlaunch-Base](https://github.com/CraftyBoss/SMO-Exlaunch-Base/)
+- [Atmosphère contributors](https://github.com/Atmosphere-NX/Atmosphere/graphs/contributors)
+  - [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere/)
+- [Thog](https://github.com/Thog)
+  - [oss-rtld](https://github.com/Thog/oss-rtld)
