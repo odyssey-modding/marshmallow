@@ -88,6 +88,8 @@ extern "C" void userInit() {
     if (mem_layout::s_SelfModuleIdx != mem_layout::s_RtldModuleIdx) {
         // we are not rtld!
 
+        mallow::exception::installHandlerAsSubsdk();
+
         // this allows atmosphere to detect symbols in our module!
         // this is only okay when we aren't rtld, as we would be overwriting the exception handler's
         // route otherwise.
