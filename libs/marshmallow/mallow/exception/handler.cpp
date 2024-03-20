@@ -1,11 +1,5 @@
 #include <array>
-#include <cstdint>
 #include <exl/armv8.hpp>
-#include <exl/armv8/instructions/base.hpp>
-#include <exl/armv8/instructions/op100x/add_subtract_immediate/add_immediate.hpp>
-#include <exl/armv8/instructions/op100x/pc_rel_addressing/adrp.hpp>
-#include <exl/armv8/instructions/op101x/unconditional_branch_immediate/b.hpp>
-#include <exl/armv8/instructions/op101x/unconditional_branch_register/br.hpp>
 #include <exl/armv8/register.hpp>
 #include <exl/nx/arm/tls.h>
 #include <exl/nx/kernel/svc.h>
