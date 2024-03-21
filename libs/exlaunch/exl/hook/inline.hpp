@@ -1,6 +1,8 @@
 #pragma once
 
 #include <exl/common.hpp>
+#include <exl/diag/assert.hpp>
+#include <nn/ro.h>
 
 #include "base.hpp"
 
@@ -27,5 +29,13 @@ namespace exl::hook::impl {
             hook::HookInline(ptr, Derived::Callback);
         }
 
+        static ALWAYS_INLINE void InstallAtSymbol(const char* symbol) {
+            _HOOK_STATIC_CALLBACK_ASSERT();
+
+            uintptr_t address = 0;
+            EXL_ASSERT(nn::ro::LookupSymbol(&address, symbol).IsSuccess(), "Symbol not found!");
+            
+            hook::HookInline(address, Derived::Callback);
+        }
     };
 }

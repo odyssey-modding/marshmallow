@@ -2,6 +2,8 @@ add_library(marshmallow STATIC)
 
 target_sources(marshmallow
     PRIVATE
+        mallow/alloc.hpp
+        mallow/exception/abort.cpp
         mallow/exception/handler.cpp
         mallow/exception/handler.hpp
         mallow/exception/handler.s

@@ -2,6 +2,8 @@
 
 #include "base.hpp"
 #include "exl/util/func_ptrs.hpp"
+#include <exl/diag/assert.hpp>
+#include <nn/ro.h>
 
 #define HOOK_DEFINE_REPLACE(name)                        \
 struct name : public ::exl::hook::impl::ReplaceHook<name>
@@ -34,6 +36,15 @@ namespace exl::hook::impl {
             _HOOK_STATIC_CALLBACK_ASSERT();
             
             hook::Hook(ptr, Derived::Callback);
+        }
+
+        static ALWAYS_INLINE void InstallAtSymbol(const char* symbol) {
+            _HOOK_STATIC_CALLBACK_ASSERT();
+
+            uintptr_t address = 0;
+            EXL_ASSERT(nn::ro::LookupSymbol(&address, symbol).IsSuccess(), "Symbol not found!");
+            
+            hook::Hook(address, Derived::Callback);
         }
     };
 

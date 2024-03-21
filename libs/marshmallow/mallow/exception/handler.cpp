@@ -38,6 +38,8 @@ namespace mallow::exception {
         nn::os::CpuRegister far;
     };
 
+    static_assert(sizeof(KernelExceptionInfo) == 0x78, "KernelExceptionInfo size mismatch");
+
     std::array<nn::os::CpuRegister, 21> extraGpRegisters;
     std::array<nn::os::FpuRegister, 32> fpuRegisters;
     KernelExceptionInfo* activeExceptionInfo = nullptr;
@@ -69,6 +71,8 @@ namespace mallow::exception {
             fpuRegisters[i] = info->fpuRegisters[i];
         }
 
+        activeExceptionInfo = nullptr;
+
         handlePhaseFour(exiting, &extraGpRegisters.data()->x, &fpuRegisters.data()->v);
     }
     extern void handlePhaseOne(ExceptionType type, KernelExceptionInfo* info);
@@ -78,7 +82,6 @@ namespace mallow::exception {
             svcReturnFromException(1);
         }
         activeExceptionInfo = info;
-        dbg::debugPrint("Hit phase two\n");
         std::array<nn::os::CpuRegister, 29> gpRegisters;
         ExceptionInfo userExceptionInfo = {
             .gpRegisters = gpRegisters,
@@ -108,7 +111,6 @@ namespace mallow::exception {
         if (handler)
             handler(&userExceptionInfo);
 
-        log::logLine("Exception handler returned, exiting!");
         handlePhaseThree(&userExceptionInfo, true);
     }
 

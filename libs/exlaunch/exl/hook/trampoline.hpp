@@ -2,7 +2,10 @@
 
 #include "base.hpp"
 #include "exl/util/func_ptrs.hpp"
-#include <functional>
+#include <cstdint>
+#include <exl/diag/assert.hpp>
+#include <exl/types.h>
+#include <nn/ro.h>
 
 #define HOOK_DEFINE_TRAMPOLINE(name)                        \
 struct name : public ::exl::hook::impl::TrampolineHook<name>
@@ -51,6 +54,15 @@ namespace exl::hook::impl {
             _HOOK_STATIC_CALLBACK_ASSERT();
             
             OrigRef() = hook::Hook(ptr, Derived::Callback, true);
+        }
+
+        static ALWAYS_INLINE void InstallAtSymbol(const char* symbol) {
+            _HOOK_STATIC_CALLBACK_ASSERT();
+
+            uintptr_t address = 0;
+            EXL_ASSERT(nn::ro::LookupSymbol(&address, symbol).IsSuccess(), "Symbol not found!");
+
+            OrigRef() = hook::Hook(address, Derived::Callback, true);
         }
     };
 

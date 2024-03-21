@@ -11,8 +11,8 @@
  * @brief Gets the thread local storage buffer.
  * @return The thread local storage buffer.
  */
-static inline void* armGetTls(void) {
-    void* ret;
+static inline char* armGetTls(void) {
+    char* ret;
     __asm__ ("mrs %x[data], tpidrro_el0" : [data] "=r" (ret));
     return ret;
 }

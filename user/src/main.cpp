@@ -1,8 +1,6 @@
 // This file is the entry point for user code.
-#include <exl/nx/kernel/svc.h>
 #include <mallow/exception/handler.hpp>
 #include <mallow/logging/logger.hpp>
-#include <nn/fs.h>
 
 // If you don't know what to do, see exlaunch for an example.
 // https://github.com/shadowninja108/exlaunch/blob/main/source/program/main.cpp#L3-L37
@@ -30,28 +28,20 @@ extern "C" void userMain() {
     mallow::log::logLine("Hello, world!");
 
     mallow::exception::setExceptionHandler([](mallow::exception::ExceptionInfo* info) {
+        // Basic example exception handler.
         mallow::log::logLine("Exception type: %u", static_cast<u32>(info->type));
         mallow::log::logLine("Exception PC: 0x%016llX", info->pc.x);
         mallow::log::logLine("Exception SP: 0x%016llX", info->sp.x);
         mallow::log::logLine("Exception LR: 0x%016llX", info->lr.x);
         mallow::log::logLine("Exception FP: 0x%016llX", info->fp.x);
+        // This is the contents of SPSR_EL1 & 0xF0000000
         mallow::log::logLine("Exception PSTATE: 0x%08X", info->pstate);
+        // https://esr.arm64.dev/ for ESR decoding
         mallow::log::logLine("Exception ESR: 0x%08X", info->esr);
         mallow::log::logLine("Exception AFSR0: 0x%08X", info->afsr0);
         mallow::log::logLine("Exception AFSR1: 0x%08X", info->afsr1);
         mallow::log::logLine("Exception FAR: 0x%016llX", info->far.x);
 
-        if (info->pc.x == 0) {
-            mallow::log::logLine("Exception PC is 0, unrecoverable!");
-            info->exit();
-        } else {
-            mallow::log::logLine("Returning from exception...");
-            info->ignoreException();
-        }
+        info->exit();
     });
-
-    // cause an exception :3
-    mallow::log::logLine("Causing an exception...");
-    ((volatile int*)0)[0] = 0;
-    mallow::log::logLine("Did the exception really happen...?");
 }

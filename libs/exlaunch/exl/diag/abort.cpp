@@ -16,55 +16,81 @@
 
 #include "abort.hpp"
 
-#include <cstring>
 #include <algorithm>
 #include <atomic>
+#include <cstdarg>
+#include <cstring>
 
 namespace exl::diag {
-
-    void NORETURN NOINLINE AbortImpl(const AbortCtx & ctx) {
-        #ifdef EXL_SUPPORTS_REBOOTPAYLOAD
-        /* Ensure abort handler doesn't recursively abort. */
-        static std::atomic<bool> recurse_guard;
-        auto recursing = recurse_guard.exchange(true);
-
-        if(!recursing && util::IsSocErista()) {
-            /* Reboot to abort payload.*/
-            AbortToPayload(ctx);
-        } else 
-        #endif
-        {
-            /* We have no capability of chainloading payloads on mariko. */
-            /* Don't have a great solution for this at the moment, just data abort. */
-            /* TODO: maybe write to a file? custom fatal program? */
-            register u64 addr __asm__("x27") = 0x6969696969696969;
-            register u64 val __asm__("x28")  = ctx.m_Result;
-            while (true) {
-                __asm__ __volatile__ (
-                    "str %[val], [%[addr]]"
-                    :
-                    : [val]"r"(val), [addr]"r"(addr)
-                );
-            }
-        }
-
-        UNREACHABLE;
+    void NORETURN NOINLINE AssertionFailureImpl(const char* file, int line, const char* func,
+                                                const char* expr, u64 value, const char* format,
+                                                ...) {
+        va_list args;
+        va_start(args, format);
+        exl::diag::AbortCtx ctx{
+            .value = value,
+            .line = line,
+            .isAssertion = true,
+            .file = file,
+            .func = func,
+            .expr = expr,
+            .format = format,
+            .args = args,
+        };
+        AbortImpl(ctx);
+    }
+    void NORETURN NOINLINE AssertionFailureImpl(const char* file, int line, const char* func,
+                                                const char* expr, u64 value) {
+        exl::diag::AbortCtx ctx{
+            .value = value,
+            .line = line,
+            .isAssertion = true,
+            .file = file,
+            .func = func,
+            .expr = expr,
+        };
+        AbortImpl(ctx);
+    }
+    void NORETURN NOINLINE AbortImpl(const char* file, int line, const char* func, const char* expr,
+                                     u64 value, const char* format, ...) {
+        va_list args;
+        va_start(args, format);
+        exl::diag::AbortCtx ctx{
+            .value = value,
+            .line = line,
+            .isAssertion = false,
+            .file = file,
+            .func = func,
+            .expr = expr,
+            .format = format,
+            .args = args,
+        };
+        AbortImpl(ctx);
+    }
+    void NORETURN NOINLINE AbortImpl(const char* file, int line, const char* func, const char* expr,
+                                     u64 value) {
+        exl::diag::AbortCtx ctx{
+            .value = value,
+            .line = line,
+            .isAssertion = false,
+            .file = file,
+            .func = func,
+            .expr = expr,
+        };
+        AbortImpl(ctx);
     }
 
-    #define ABORT_WITH_VALUE(v)                             \
-    {                                                       \
-        exl::diag::AbortCtx ctx {.m_Result = (Result)v};    \
-        AbortImpl(ctx);                                     \
-    }
-
-    /* TODO: better assert/abort support. */
-    void NORETURN NOINLINE AssertionFailureImpl(const char *file, int line, const char *func, const char *expr, u64 value, const char *format, ...) ABORT_WITH_VALUE(value)
-    void NORETURN NOINLINE AssertionFailureImpl(const char *file, int line, const char *func, const char *expr, u64 value)                          ABORT_WITH_VALUE(value)
-    void NORETURN NOINLINE AbortImpl(const char *file, int line, const char *func, const char *expr, u64 value, const char *format, ...)            ABORT_WITH_VALUE(value)
-    void NORETURN NOINLINE AbortImpl(const char *file, int line, const char *func, const char *expr, u64 value)                                     ABORT_WITH_VALUE(value)
-
-};
+};  // namespace exl::diag
 
 /* C shim for libnx */
-extern "C" NORETURN void exl_abort(Result r) 
-    ABORT_WITH_VALUE(r)
+extern "C" NORETURN void exl_abort(Result r) {
+    exl::diag::AbortCtx ctx{
+        .value = r,
+        .line = __LINE__,
+        .isAssertion = false,
+        .file = __FILE__,
+        .func = __func__,
+        .expr = "exl_abort",
+    };
+    exl::diag::AbortImpl(ctx);
+}

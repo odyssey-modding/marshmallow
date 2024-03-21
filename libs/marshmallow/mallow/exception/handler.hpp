@@ -1,6 +1,9 @@
 #pragma once
 
 #include <array>
+#include <cstdio>
+#include <cstring>
+#include <exl/nx/arm/tls.h>
 #include <exl/nx/kernel/svc.h>
 #include <exl/types.h>
 #include <nn/os.h>
@@ -53,7 +56,7 @@ namespace mallow::exception {
 
     using HandlerFunc = void (*)(ExceptionInfo* info);
     HandlerFunc setExceptionHandler(HandlerFunc handler);
-    
+
     void initialize();
     void installHandlerAsSubsdk();
 
@@ -66,4 +69,8 @@ namespace mallow::exception {
         }
         ~ScopedHandler() { setExceptionHandler(previousHandler); }
     };
+
+    static ALWAYS_INLINE void causeException() {
+        asm volatile("svc #0xBEEF");
+    }
 }  // namespace mallow::exception
