@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../armv8.hpp"
+#include <exl/armv8.hpp>
 #include "stream_patcher.hpp"
 
 namespace exl::patch {

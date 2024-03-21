@@ -25,8 +25,8 @@ set(NN_SDK_MINOR 5)
 set(NN_SDK_PATCH 1)
 set(NN_SDK_TYPE "Release")
 
-add_subdirectory(libs/exlaunch)
 add_subdirectory(libs/nnsdk)
+add_subdirectory(libs/exlaunch)
 add_subdirectory(libs/marshmallow)
 
 add_executable(subsdk9)

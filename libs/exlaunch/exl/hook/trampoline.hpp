@@ -1,21 +1,19 @@
 #pragma once
 
-#include "base.hpp"
-#include "exl/util/func_ptrs.hpp"
 #include <cstdint>
 #include <exl/diag/assert.hpp>
+#include <exl/reloc/ro.h>
 #include <exl/types.h>
-#include <nn/ro.h>
+#include <exl/util/func_ptrs.hpp>
+#include "base.hpp"
 
-#define HOOK_DEFINE_TRAMPOLINE(name)                        \
-struct name : public ::exl::hook::impl::TrampolineHook<name>
+#define HOOK_DEFINE_TRAMPOLINE(name) struct name : public ::exl::hook::impl::TrampolineHook<name>
 
 namespace exl::hook::impl {
 
-    template<typename Derived>
+    template <typename Derived>
     class TrampolineHook {
-            
-        template<typename T = Derived>
+        template <typename T = Derived>
         using CallbackFuncPtr = decltype(&T::Callback);
 
         static ALWAYS_INLINE auto& OrigRef() {
@@ -26,9 +24,9 @@ namespace exl::hook::impl {
             return s_FnPtr;
         }
 
-        public:
-        template<typename... Args>
-        static ALWAYS_INLINE decltype(auto) Orig(Args &&... args) {
+    public:
+        template <typename... Args>
+        static ALWAYS_INLINE decltype(auto) Orig(Args&&... args) {
             _HOOK_STATIC_CALLBACK_ASSERT();
 
             return OrigRef()(std::forward<Args>(args)...);
@@ -37,22 +35,24 @@ namespace exl::hook::impl {
         static ALWAYS_INLINE void InstallAtOffset(ptrdiff_t address) {
             _HOOK_STATIC_CALLBACK_ASSERT();
 
-            OrigRef() = hook::Hook(util::modules::GetTargetStart() + address, Derived::Callback, true);
+            OrigRef() =
+                hook::Hook(util::modules::GetTargetStart() + address, Derived::Callback, true);
         }
 
-        template<typename R, typename ...A>
+        template <typename R, typename... A>
         static ALWAYS_INLINE void InstallAtFuncPtr(util::GenericFuncPtr<R, A...> ptr) {
             _HOOK_STATIC_CALLBACK_ASSERT();
             using ArgFuncPtr = decltype(ptr);
 
-            static_assert(std::is_same_v<ArgFuncPtr, CallbackFuncPtr<>>, "Argument pointer type must match callback type!");
+            static_assert(std::is_same_v<ArgFuncPtr, CallbackFuncPtr<>>,
+                          "Argument pointer type must match callback type!");
 
             OrigRef() = hook::Hook(ptr, Derived::Callback, true);
         }
 
         static ALWAYS_INLINE void InstallAtPtr(uintptr_t ptr) {
             _HOOK_STATIC_CALLBACK_ASSERT();
-            
+
             OrigRef() = hook::Hook(ptr, Derived::Callback, true);
         }
 
@@ -60,10 +60,10 @@ namespace exl::hook::impl {
             _HOOK_STATIC_CALLBACK_ASSERT();
 
             uintptr_t address = 0;
-            EXL_ASSERT(nn::ro::LookupSymbol(&address, symbol).IsSuccess(), "Symbol not found!");
+            EXL_ASSERT(R_SUCCEEDED(nn::ro::LookupSymbol(&address, symbol)), "Symbol not found!");
 
             OrigRef() = hook::Hook(address, Derived::Callback, true);
         }
     };
 
-}
+}  // namespace exl::hook::impl

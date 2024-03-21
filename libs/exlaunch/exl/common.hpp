@@ -1,11 +1,11 @@
 #pragma once
 
-#include "types.h"
+#include <exl/types.h>
 
-#include "exl/alloc.hpp"
-#include "exl/setting.hpp"
-#include "exl/nx/nx.h"
-#include "exl/result.hpp"
+#include <exl/alloc.hpp>
+#include <exl/setting.hpp>
+#include <exl/nx/nx.h>
+#include <exl/result.hpp>
 
 #define APPEND_IMPL(x, y) x##y
 #define APPEND(x, y) APPEND_IMPL(x, y)

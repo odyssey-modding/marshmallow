@@ -1,13 +1,8 @@
 #pragma once
 
 #include <array>
-#include <cstdio>
-#include <cstring>
-#include <exl/nx/arm/tls.h>
-#include <exl/nx/kernel/svc.h>
 #include <exl/types.h>
 #include <nn/os.h>
-#include <nn/types.h>
 
 namespace mallow::exception {
     enum class ExceptionType : u32 {

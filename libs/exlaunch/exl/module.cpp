@@ -1,5 +1,5 @@
 #include <string>
-#include "exl/types.h"
+#include <exl/lib.hpp>
 
 #define Name "Marshmallow"
 constexpr const int NameLength = std::char_traits<char>::length(Name);

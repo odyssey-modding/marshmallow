@@ -62,7 +62,7 @@ static void _memregionInitHardcoded(MemRegion *r, uintptr_t start, uintptr_t end
     r->end = end;
 }
 
-NX_INLINE bool _memregionIsInside(MemRegion *r, uintptr_t start, uintptr_t end) {
+NX_INLINE UNUSED bool _memregionIsInside(MemRegion *r, uintptr_t start, uintptr_t end) {
     return start >= r->start && end <= r->end;
 }
 
