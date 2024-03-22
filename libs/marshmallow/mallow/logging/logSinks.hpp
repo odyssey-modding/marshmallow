@@ -47,6 +47,8 @@ namespace mallow::log::sink {
         NetworkSink(NetworkSink&&) = delete;
         NetworkSink& operator=(const NetworkSink&) = delete;
 
+        static NetworkSink fromConfig(const char* path);
+
         // If the connection is not established, the log functions will do nothing
         // Check the debug output for errors.
         bool isSuccessfullyConnected() const { return fileDescriptor >= 0; }

@@ -10,4 +10,10 @@
 target_sources(subsdk9 PRIVATE
         ${SUBSDK9_SOURCES}
         src/main.cpp
+        src/mallowConfig.cpp
+)
+
+target_include_directories(subsdk9 PUBLIC
+        # add any extra include directories here...
+        src
 )

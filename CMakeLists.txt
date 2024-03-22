@@ -12,8 +12,8 @@ add_compile_options(-fPIC)
 add_compile_options(-fstandalone-debug)
 add_compile_options(-v -Wall -O3 -nostdlib -ffunction-sections -fdata-sections)
 add_compile_options(-Werror=return-type)
-add_compile_options(-fno-rtti -fno-exceptions -fno-asynchronous-unwind-tables -fno-unwind-tables)
-add_definitions(-D SWITCH)
+add_compile_options(-fno-rtti -fno-asynchronous-unwind-tables -fno-unwind-tables)
+add_compile_definitions(ARDUINOJSON_ENABLE_COMMENTS SWITCH)
 add_link_options(-shared -ffunction-sections -fdata-sections)
 add_link_options(-stdlib=libc++ -nostdlib)
 
@@ -27,6 +27,7 @@ set(NN_SDK_TYPE "Release")
 
 add_subdirectory(libs/nnsdk)
 add_subdirectory(libs/exlaunch)
+add_subdirectory(libs/ArduinoJson)
 add_subdirectory(libs/marshmallow)
 
 add_executable(subsdk9)
