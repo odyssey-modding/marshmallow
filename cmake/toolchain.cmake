@@ -75,6 +75,9 @@ file(REAL_PATH "${TOOLS_DIR}/clang/bin/clang++${EXE_EXT}" CLANGD_DRIVER_PATH)
 file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${CLANGD_DRIVER_PATH}")
 
 # generate .vscode/settings.json
+if (FTP_IP)
+  set(CONFIGURE_FTP_IP "-DFTP_IP=${FTP_IP}")
+endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.template.jsonc" "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json" @ONLY)
 
 set(CMAKE_C_COMPILER_WORKS true)
