@@ -31,5 +31,6 @@ static void setupLogging() {
 
 extern "C" void userMain() {
     nn::fs::MountSdCardForDebug("sd");
+
     setupLogging();
 }
