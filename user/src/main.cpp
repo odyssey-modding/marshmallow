@@ -25,7 +25,7 @@ static void setupLogging() {
         else
             mallow::log::logLine("Failed to connect to the network sink");
     } else {
-        mallow::log::logLine("The network logger was configured improperly.");
+        mallow::log::logLine("The network logger is unconfigured.");
     }
 }
 
