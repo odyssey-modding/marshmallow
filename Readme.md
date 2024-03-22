@@ -9,7 +9,7 @@ The only supported host platforms are Windows and Linux.
 Dependencies: [CMake](https://cmake.org/)(>=v3.21) and [Ninja](https://ninja-build.org/).  
 Both should be available from your package manager, be it `winget`, `apt`, `pacman` or anything else.
 
-To configure the CMake project, run this command. See [defintions](#CMake definition args) for flags to add on.
+To configure the CMake project, run this command. See [definitions](#CMake definition args) for flags to add on.
 ```shell
 cmake -S . -B build -G Ninja --toolchain=cmake/toolchain.cmake
 ```
@@ -19,10 +19,22 @@ ninja -C build
 ```
 Any other target generators are untested and unsupported.
 
-## Todo
-Better introspection on the game (locating the end of functions)
-Better exception handler
-Hook definitions without macros
+## Logging
+As you can see in user/src/main.cpp, there's a few logger destinations available.
+The default file location in that file is `sd:/mallow.log`
+If you want network logging, you can make a json file at `sd:/mallow.json` with the contents:
+```json
+{
+  "logger": {
+    // The address (hostname or IPv4) where the log server is hosted.
+    "ip": "XXX.XXX.XXX.XXX",
+    "port": 3080
+  }
+}
+```
+Hosting a log server on Linux (not WSL!) is as easy as running `nc -lk 3080`.
+On Windows, there is an included logserver.js which also opens a raw tcp server.
+You will need Node.js if you want to use logserver.js, otherwise you should make your own log server.
 
 ### CMake definition arguments:
 - `-DFTP_IP=XXX.XXX.XXX.XXX`
