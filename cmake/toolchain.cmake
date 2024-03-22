@@ -60,6 +60,8 @@ if(NOT EXISTS "${TOOLS_DIR}/curl")
   file(DOWNLOAD "${CURL_DOWNLOAD_URL}" "${TOOLS_TMP_DIR}/curl.tar.xz" SHOW_PROGRESS)
   file(MAKE_DIRECTORY "${TOOLS_DIR}/curl")
   file(ARCHIVE_EXTRACT INPUT "${TOOLS_TMP_DIR}/curl.tar.xz" DESTINATION "${TOOLS_DIR}/curl")
+
+  file(CHMOD ${TOOLS_DIR}/curl${EXE_EXT} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 endif()
 
 set(CMAKE_C_COMPILER "${TOOLS_DIR}/clang/bin/clang${EXE_EXT}")
@@ -70,14 +72,10 @@ set(CURL_LOCATION "${TOOLS_DIR}/curl/curl${EXE_EXT}")
 file(REAL_PATH "${TOOLS_DIR}/clang/bin/clang++${EXE_EXT}" CLANGD_DRIVER_PATH)
 
 # generate a .clangd file
-if (NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.clangd")
-  file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${CLANGD_DRIVER_PATH}")
-endif()
+file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../.clangd" "CompileFlags:\n  Remove: [-mcpu=]\n  Compiler: ${CLANGD_DRIVER_PATH}")
 
 # generate .vscode/settings.json
-if (NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json")
-  configure_file("${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.template.jsonc" "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json" @ONLY)
-endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.template.jsonc" "${CMAKE_CURRENT_LIST_DIR}/../.vscode/settings.json" @ONLY)
 
 set(CMAKE_C_COMPILER_WORKS true)
 set(CMAKE_CXX_COMPILER_WORKS true)
