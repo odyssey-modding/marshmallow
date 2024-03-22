@@ -21,13 +21,14 @@ Any other target generators are untested and unsupported.
 
 ## Logging
 As you can see in user/src/main.cpp, there's a few logger destinations available.
-The default file location in that file is `sd:/mallow.log`
+The default file location in that file is `sd:/mallow.log`.
 If you want network logging, you can make a json file at `sd:/mallow.json` with the contents:
 ```json
 {
   "logger": {
     // The address (hostname or IPv4) where the log server is hosted.
     "ip": "XXX.XXX.XXX.XXX",
+    // The default port of choice is 3080.
     "port": 3080
   }
 }
