@@ -1,10 +1,7 @@
 #include <alloca.h>
 #include <cstdio>
-#include <exl/armv8.hpp>
-#include <exl/nx/kernel/svc.h>
-#include <exl/util/sys/rw_pages.hpp>
-#include <mallow/logging/debug.hpp>
-#include <mallow/logging/logSinks.hpp>
+#include <exl/lib.hpp>
+#include <mallow/mallow.hpp>
 #include <nn/fs.h>
 #include <nn/nifm.h>
 #include <nn/socket.hpp>
@@ -89,26 +86,14 @@ namespace mallow::log::sink {
                         [](const char* row, std::size_t size) { svcOutputDebugString(row, size); });
     }
 
-    static char socketPool[0x400000 + 0x20000] __attribute__((aligned(0x1000)));
-
     bool NetworkSink::initialized = false;
 
     NetworkSink::NetworkSink(const char* host, u16 port) : mutex(false) {
         if (!initialized) {
-            nn::nifm::Initialize();
-            nn::nifm::SubmitNetworkRequestAndWait();
-
-            nn::socket::Initialize(socketPool, 0x400000, 0x20000, 0xE);
-
-            // Prevent the socket service from being reinitialized
-            exl::util::RwPages pages =
-                exl::util::RwPages(reinterpret_cast<uintptr_t>(&nn::socket::Initialize), 4);
-            reinterpret_cast<u32*>(pages.GetRw())[0] = exl::armv8::inst::Ret().Value();
-
-            if (!nn::nifm::IsNetworkAvailable()) {
-                dbg::debugPrint("NetworkSink: network not available");
-
-                // Should we abort here as well?
+            mallow::net::initializeNetwork();
+            
+            if (mallow::net::initializationResult().IsFailure()) {
+                dbg::debugPrint("NetworkSink: failed to initialize network");
                 return;
             }
 

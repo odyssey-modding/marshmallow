@@ -16,6 +16,7 @@ target_sources(marshmallow
         mallow/logging/logger.hpp
         mallow/logging/logSinks.cpp
         mallow/logging/logSinks.hpp
+        mallow/net/socket.cpp
 )
 
 target_include_directories(marshmallow

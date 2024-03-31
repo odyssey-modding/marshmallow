@@ -1,4 +1,5 @@
 // This file is the entry point for user code.
+#include <mallow/config.hpp>
 #include <mallow/mallow.hpp>
 
 // If you don't know what to do, see exlaunch for an example.
@@ -13,7 +14,6 @@ static void setupLogging() {
     addLogSink(&fileSink);
 
     // This sink writes to a network socket on a host computer. Raw logs are sent with no
-    // processing.
     auto config = mallow::config::getConfig();
     if (config["logger"]["ip"].is<const char*>()) {
         static NetworkSink networkSink = NetworkSink(
@@ -26,11 +26,17 @@ static void setupLogging() {
             mallow::log::logLine("Failed to connect to the network sink");
     } else {
         mallow::log::logLine("The network logger is unconfigured.");
+        if (config["logger"].isNull()) {
+            mallow::log::logLine("Please configure the logger in config.json");
+        } else if (!config["logger"]["ip"].is<const char*>()) {
+            mallow::log::logLine("The IP address is missing or invalid.");
+        }
     }
 }
 
 extern "C" void userMain() {
     nn::fs::MountSdCardForDebug("sd");
+    mallow::config::loadConfig(true);
 
     setupLogging();
 }

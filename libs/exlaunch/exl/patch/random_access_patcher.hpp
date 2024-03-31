@@ -1,6 +1,7 @@
 #pragma once
 
 #include <exl/lib.hpp>
+#include <algorithm>
 
 namespace exl::patch {
     
