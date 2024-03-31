@@ -128,6 +128,9 @@ namespace mallow::log::sink {
                 return;
             }
 
+            bool tcpNoDelayOpt = true;
+            nn::socket::SetSockOpt(fileDescriptor, 6, TCP_NODELAY, &tcpNoDelayOpt, sizeof(tcpNoDelayOpt));
+
             dbg::debugPrint("NetworkSink: connected to server");
 
             initialized = true;

@@ -39,6 +39,7 @@ struct hostent {
 #define IPPROTO_IP 0
 #define IPPROTO_TCP 6
 #define IPPROTO_UDP 17
+#define TCP_NODELAY 1
 
 namespace nn {
     namespace socket {
